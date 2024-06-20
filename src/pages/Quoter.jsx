@@ -1,8 +1,11 @@
+import Box from '../components/common/Box';
+
 const Quoter = () => {
     return (
-      <div>
-        <h2>Quoter</h2>
-      </div>
+        <Box title="COTIZAR">
+          <p>Contenido dentro del Box.</p>
+          <button>Botón dentro del Box</button>
+        </Box>
     );
   };
   

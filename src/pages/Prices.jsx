@@ -1,8 +1,11 @@
+import Box from '../components/common/Box';
+
 const Prices = () => {
     return (
-      <div>
-        <h2>Prices</h2>
-      </div>
+        <Box title="PRECIOS">
+          <p>Contenido dentro del Box.</p>
+          <button>Botón dentro del Box</button>
+        </Box>
     );
   };
   
