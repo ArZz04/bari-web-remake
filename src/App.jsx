@@ -11,16 +11,16 @@ import Layout from "./components/layouts/Layout.jsx"; // Importa el nuevo compon
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="home" element={<Home />} />
-          <Route path="quoter" element={<Quoter />} />
-          <Route path="prices" element={<Prices />} />
-          <Route path="calculator" element={<Calculator />} />
-        </Route>
-        <Route path="*" element={<NotFound />} /> {/* Ruta para manejar páginas no encontradas sin navegación */}
-      </Routes>
+      <Layout> {/* Renderiza el Layout común para todas las rutas */}
+        <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="home" element={<Home />} />
+            <Route path="quoter" element={<Quoter />} />
+            <Route path="prices" element={<Prices />} />
+            <Route path="calculator" element={<Calculator />} />
+            <Route path="*" element={<NotFound />} /> {/* Ruta para manejar páginas no encontradas */}
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 }
