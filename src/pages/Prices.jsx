@@ -32,10 +32,10 @@ const Prices = () => {
 
       if (productName) {
         exists = await checkProductExistence({ productName });
-        productFound = productName;
+        productFound = exists;
       } else if (plu) {
         exists = await checkProductExistence({ pluProduct: plu });
-        productFound = plu;
+        productFound = exists;
       }
 
       if (exists) {
