@@ -16,13 +16,11 @@ const ModalPrice = ({ product, onClose, hidden }) => {
     onClose(); // Llamar a la función onClose para cerrar el modal desde el componente padre
   };
 
-
-
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
 
-
+  console.log(product);
 
   return (
     <div
@@ -66,34 +64,34 @@ const ModalPrice = ({ product, onClose, hidden }) => {
               <div className="grid gap-4 mb-4 grid-cols-2">
                 <div className="col-span-2">
                   <Label text="Código de Barras" forId="true" />
-                  <Input type="text" id="true" placeHolder={"200010123100"} />
+                  <Input type="text" id="true" placeHolder={"200010123100"} value={product.barcode} />
                 </div>
                 <div className="col-span-2">
                   <Label text="Nombre" forId="name" />
-                  <Input type="text" id="name" placeHolder={"BISTEC DE RES"} />
+                  <Input type="text" id="name" placeHolder={"BISTEC DE RES"} value={product.nombre} />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
-                  <Label text="PLU" forId="plu" />
-                  <Input type="text" id="plu" placeHolder={"100"} />
+                  <Label text="PLU" forId="plu"  />
+                  <Input type="text" id="plu" placeHolder={"100"} value={product.plu} />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <Label text="Precio" forId="price" />
-                  <Input type="text" id="price" placeHolder={"$198"} />
+                  <Input type="text" id="price" placeHolder={"$198"} value={product.precio} />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <Label text="Familia" forId="family" />
                   <select
                     id="category"
-                    defaultValue="RES"
+                    defaultValue={product.family}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   >
                     <option value="">Seleccione una categoría</option>
-                    <option value="RES">RES</option>
-                    <option value="PC">CERDO</option>
-                    <option value="GA">POLLO</option>
-                    <option value="PH">MARISCO</option>
-                    <option value="PH">CREMERIA</option>
-                    <option value="PH">ABARROTES</option>
+                    <option value="res">RES</option>
+                    <option value="cerdo">CERDO</option>
+                    <option value="pollo">POLLO</option>
+                    <option value="marisco">MARISCO</option>
+                    <option value="cremeria">CREMERIA</option>
+                    <option value="abarrotes">ABARROTES</option>
                   </select>
                 </div>
 
@@ -103,7 +101,7 @@ const ModalPrice = ({ product, onClose, hidden }) => {
                     checked={isChecked}
                     onChange={handleCheckboxChange}
                     id="basculas-check"
-                    value="true"
+                    value={product.scale ? "true" : "false"}
                     name="bordered-checkbox"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
