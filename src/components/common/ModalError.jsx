@@ -18,7 +18,7 @@ const ModalError = ({ body, onClose, hidden }) => {
 
   return (
     <div className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-screen bg-black bg-opacity-50">
-      <div className="bg-gray-900 rounded-lg shadow-lg w-full max-w-md">
+      <div className="bg-gray-700 rounded-lg shadow-lg w-full max-w-md">
         <button
           type="button"
           className="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
