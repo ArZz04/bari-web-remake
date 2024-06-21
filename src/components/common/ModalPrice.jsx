@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import Button from "./Button";
+import Label from "./Label";
+import Input from "./Input";
 
 const ModalPrice = ({ product, onClose, hidden }) => {
   const [isVisible, setIsVisible] = useState(!hidden);
+  const [isChecked, setIsChecked] = useState(false);
 
   if (!product || hidden) {
     return null; // Si product no está definido o hidden es true, no renderiza nada
@@ -11,6 +15,13 @@ const ModalPrice = ({ product, onClose, hidden }) => {
     setIsVisible(false);
     onClose(); // Llamar a la función onClose para cerrar el modal desde el componente padre
   };
+
+
+
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
 
 
   return (
@@ -52,91 +63,63 @@ const ModalPrice = ({ product, onClose, hidden }) => {
           </div>
 
           <form className="p-4 md:p-5">
-            <div className="grid gap-4 mb-4 grid-cols-2">
-              <div className="col-span-2">
-                <label
-                  htmlFor="name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  {product}
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Ingrese el nombre del producto"
-                  required
-                />
+              <div className="grid gap-4 mb-4 grid-cols-2">
+                <div className="col-span-2">
+                  <Label text="Código de Barras" forId="true" />
+                  <Input type="text" id="true" placeHolder={"200010123100"} />
+                </div>
+                <div className="col-span-2">
+                  <Label text="Nombre" forId="name" />
+                  <Input type="text" id="name" placeHolder={"BISTEC DE RES"} />
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <Label text="PLU" forId="plu" />
+                  <Input type="text" id="plu" placeHolder={"100"} />
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <Label text="Precio" forId="price" />
+                  <Input type="text" id="price" placeHolder={"$198"} />
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <Label text="Familia" forId="family" />
+                  <select
+                    id="category"
+                    defaultValue="RES"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  >
+                    <option value="">Seleccione una categoría</option>
+                    <option value="RES">RES</option>
+                    <option value="PC">CERDO</option>
+                    <option value="GA">POLLO</option>
+                    <option value="PH">MARISCO</option>
+                    <option value="PH">CREMERIA</option>
+                    <option value="PH">ABARROTES</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center space-x-2 ps-4 border border-gray-200 rounded dark:border-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                    id="basculas-check"
+                    value="true"
+                    name="bordered-checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    htmlFor="basculas-check"
+                    className="text-sm text-gray-900 dark:text-white cursor-pointer"
+                  >
+                    Activo en Básculas
+                  </label>
+                </div>
+              </div>  
+              <div className="flex flex-row justify-between">
+                <Button body="Guardar"  />
+                <Button body="Cancelar" onClick={handleClose} />
               </div>
-              <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="price"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  example
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  id="price"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="$2999"
-                  required
-                />
-              </div>
-              <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="category"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Categoría
-                </label>
-                <select
-                  id="category"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                >
-                  <option value="">Seleccione una categoría</option>
-                  <option value="TV">TV/Monitores</option>
-                  <option value="PC">PC</option>
-                  <option value="GA">Gaming/Consola</option>
-                  <option value="PH">Teléfonos</option>
-                </select>
-              </div>
-              <div className="col-span-2">
-                <label
-                  htmlFor="description"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Descripción del Producto
-                </label>
-                <textarea
-                  id="description"
-                  rows="4"
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Escriba la descripción del producto aquí"
-                ></textarea>
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              <svg
-                className="me-1 -ms-1 w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              Agregar nuevo producto
-            </button>
-          </form>
+            </form>
         </div>
       </div>
     </div>
