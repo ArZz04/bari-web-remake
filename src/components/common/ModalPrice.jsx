@@ -2,40 +2,42 @@ import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import Label from "./Label";
 import Input from "./Input";
+import useApi from "../../services/useApi";
 
 const ModalPrice = ({ product, onClose, hidden }) => {
   const [isVisible, setIsVisible] = useState(!hidden);
   const [isChecked, setIsChecked] = useState(false);
+  const { putProductData } = useApi();
   const [editedProduct, setEditedProduct] = useState({
-    name: "",
-    plu: "",
+    DESCRIPCION: "",
+    CODIGO: "",
     BARRAS: "",
     P01: "",
-    family: "",
-    importado: false
+    FAMILIA: "",
+    IMPORTADO: false
   });
 
   // useEffect para actualizar editedProduct cuando product cambia
   useEffect(() => {
     if (product) {
       setEditedProduct({
-        name: product.DESCRIPCION || "",
-        plu: product.CODIGO || "",
+        DESCRIPCION: product.DESCRIPCION || "",
+        CODIGO: product.CODIGO || "",
         BARRAS: product.BARRAS || "",
         P01: product.P01 || "",
-        family: product.FAMILIA || "",
-        importado: !!product.IMPORTADO   // Convertir a booleano
+        FAMILIA: product.FAMILIA || "",
+        IMPORTADO: !!product.IMPORTADO   // Convertir a booleano
       });
       setIsChecked(!!product.IMPORTADO);  // Actualizar el estado del checkbox
     } else {
       // Si product es null o undefined, reiniciar editedProduct
       setEditedProduct({
-        name: "",
-        plu: "",
+        DESCRIPCION: "",
+        CODIGO: "",
         BARRAS: "",
         P01: "",
-        family: "",
-        importado: false
+        FAMILIA: "",
+        IMPORTADO: false
       });
       setIsChecked(false);  // Reiniciar el estado del checkbox
     }
@@ -55,10 +57,20 @@ const ModalPrice = ({ product, onClose, hidden }) => {
     setEditedProduct({ ...editedProduct, [id]: value });
   };
 
-  const saveProduct = () => {
-    // Aquí puedes agregar la lógica para guardar los cambios en el producto
-    console.log("Guardando cambios en el producto:", product);
-    handleClose();
+  const saveProduct = async () => {
+    try {
+      // Lógica para guardar los cambios en el producto
+      console.log("Guardando cambios en el producto:", editedProduct);
+      
+      // Llamar a la función putProductData de useApi.js para guardar los cambios
+      await putProductData(editedProduct.CODIGO, editedProduct);
+
+      // Llamar a la función onClose para cerrar el modal después de guardar
+      onClose();
+    } catch (error) {
+      console.error("Error al guardar cambios en el producto:", error);
+      // Manejo de errores: mostrar mensaje de error, etc.
+    }
   };
 
   const handleCheckboxChange = (event) => {
@@ -66,8 +78,6 @@ const ModalPrice = ({ product, onClose, hidden }) => {
     setIsChecked(checked);
     setEditedProduct({ ...editedProduct, importado: checked }); // Actualizar importado en editedProduct
   };
-
-  console.log(editedProduct);
 
   return (
     <div
@@ -123,7 +133,7 @@ const ModalPrice = ({ product, onClose, hidden }) => {
                   <Input
                   type="text"
                   id="name"
-                  value={editedProduct.name}
+                  value={editedProduct.DESCRIPCION}
                   onChange={handleInputChange}
                 />
                   </div>
@@ -132,7 +142,7 @@ const ModalPrice = ({ product, onClose, hidden }) => {
                   <Input
                   type="text"
                   id="plu"
-                  value={editedProduct.plu}
+                  value={editedProduct.CODIGO}
                   onChange={handleInputChange}
                 />
                 </div>
@@ -149,7 +159,7 @@ const ModalPrice = ({ product, onClose, hidden }) => {
                   <Label text="Familia" forId="family" />
                   <select
                   id="family"
-                  value={editedProduct.family}
+                  value={editedProduct.FAMILIA}
                   onChange={handleInputChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 >
@@ -180,7 +190,7 @@ const ModalPrice = ({ product, onClose, hidden }) => {
                 </div>
               </div>  
               <div className="flex flex-row justify-between">
-                <Button body="Guardar"  />
+                <Button body="Guardar" onClick={saveProduct}  />
                 <Button body="Cancelar" onClick={handleClose} />
               </div>
             </form>
