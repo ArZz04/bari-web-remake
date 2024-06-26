@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import Label from "./Label";
 import Input from "./Input";
@@ -6,6 +6,40 @@ import Input from "./Input";
 const ModalPrice = ({ product, onClose, hidden }) => {
   const [isVisible, setIsVisible] = useState(!hidden);
   const [isChecked, setIsChecked] = useState(false);
+  const [editedProduct, setEditedProduct] = useState({
+    name: "",
+    plu: "",
+    BARRAS: "",
+    P01: "",
+    family: "",
+    importado: false
+  });
+
+  // useEffect para actualizar editedProduct cuando product cambia
+  useEffect(() => {
+    if (product) {
+      setEditedProduct({
+        name: product.DESCRIPCION || "",
+        plu: product.CODIGO || "",
+        BARRAS: product.BARRAS || "",
+        P01: product.P01 || "",
+        family: product.FAMILIA || "",
+        importado: !!product.IMPORTADO   // Convertir a booleano
+      });
+      setIsChecked(!!product.IMPORTADO);  // Actualizar el estado del checkbox
+    } else {
+      // Si product es null o undefined, reiniciar editedProduct
+      setEditedProduct({
+        name: "",
+        plu: "",
+        BARRAS: "",
+        P01: "",
+        family: "",
+        importado: false
+      });
+      setIsChecked(false);  // Reiniciar el estado del checkbox
+    }
+  }, [product]);
 
   if (!product || hidden) {
     return null; // Si product no está definido o hidden es true, no renderiza nada
@@ -16,6 +50,11 @@ const ModalPrice = ({ product, onClose, hidden }) => {
     onClose(); // Llamar a la función onClose para cerrar el modal desde el componente padre
   };
 
+  const handleInputChange = (event) => {
+    const { id, value } = event.target;
+    setEditedProduct({ ...editedProduct, [id]: value });
+  };
+
   const saveProduct = () => {
     // Aquí puedes agregar la lógica para guardar los cambios en el producto
     console.log("Guardando cambios en el producto:", product);
@@ -23,10 +62,12 @@ const ModalPrice = ({ product, onClose, hidden }) => {
   };
 
   const handleCheckboxChange = (event) => {
-    setIsChecked(event.target.checked);
+    const { checked } = event.target;
+    setIsChecked(checked);
+    setEditedProduct({ ...editedProduct, importado: checked }); // Actualizar importado en editedProduct
   };
 
-  console.log(product);
+  console.log(editedProduct);
 
   return (
     <div
@@ -70,46 +111,66 @@ const ModalPrice = ({ product, onClose, hidden }) => {
               <div className="grid gap-4 mb-4 grid-cols-2">
                 <div className="col-span-2">
                   <Label text="Código de Barras" forId="true" />
-                  <Input type="text" id="true" placeHolder={"200010123100"} value={product.BARRAS} />
+                  <Input
+                  type="text"
+                  id="BARRAS"
+                  value={editedProduct.BARRAS || "NO CONTIENE"}
+                  onChange={handleInputChange}
+                />
                 </div>
                 <div className="col-span-2">
                   <Label text="Nombre" forId="name" />
-                  <Input type="text" id="name" placeHolder={"BISTEC DE RES"} value={product.DESCRIPCION} />
-                </div>
+                  <Input
+                  type="text"
+                  id="name"
+                  value={editedProduct.name}
+                  onChange={handleInputChange}
+                />
+                  </div>
                 <div className="col-span-2 sm:col-span-1">
                   <Label text="PLU" forId="plu"  />
-                  <Input type="text" id="plu" placeHolder={"100"} value={product.CODIGO} />
+                  <Input
+                  type="text"
+                  id="plu"
+                  value={editedProduct.plu}
+                  onChange={handleInputChange}
+                />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <Label text="Precio" forId="price" />
-                  <Input type="text" id="price" placeHolder={"$198"} value={product.P01} />
+                  <Input
+                  type="text"
+                  id="P01"
+                  value={editedProduct.P01}
+                  onChange={handleInputChange}
+                />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <Label text="Familia" forId="family" />
                   <select
-                    id="category"
-                    defaultValue={product.FAMILIA}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  >
-                    <option value="">Seleccione una categoría</option>
-                    <option value="RES">RES</option>
-                    <option value="PUERCO">CERDO</option>
-                    <option value="POLLO">POLLO</option>
-                    <option value="MARISCOS">MARISCO</option>
-                    <option value="CLA">CREMERIA</option>
-                    <option value="abarrotes">ABARROTES</option>
-                  </select>
+                  id="family"
+                  value={editedProduct.family}
+                  onChange={handleInputChange}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                >
+                  <option value="">Seleccione una categoría</option>
+                  <option value="RES">RES</option>
+                  <option value="PUERCO">CERDO</option>
+                  <option value="POLLO">POLLO</option>
+                  <option value="MARISCOS">MARISCO</option>
+                  <option value="CLA">CREMERIA</option>
+                  <option value="abarrotes">ABARROTES</option>
+                </select>
                 </div>
 
                 <div className="flex items-center space-x-2 ps-4 border border-gray-200 rounded dark:border-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={product.IMPORTADO === 1} // Verifica si IMPORTADO es igual a 1 para marcar el checkbox
-                    onChange={handleCheckboxChange}
-                    id="basculas-check"
-                    name="bordered-checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
+                <input
+                  type="checkbox"
+                  id="IMPORTADO"
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
                   <label
                     htmlFor="basculas-check"
                     className="text-sm text-gray-900 dark:text-white cursor-pointer"
