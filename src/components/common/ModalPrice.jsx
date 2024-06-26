@@ -16,6 +16,12 @@ const ModalPrice = ({ product, onClose, hidden }) => {
     onClose(); // Llamar a la función onClose para cerrar el modal desde el componente padre
   };
 
+  const saveProduct = () => {
+    // Aquí puedes agregar la lógica para guardar los cambios en el producto
+    console.log("Guardando cambios en el producto:", product);
+    handleClose();
+  };
+
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
@@ -64,33 +70,33 @@ const ModalPrice = ({ product, onClose, hidden }) => {
               <div className="grid gap-4 mb-4 grid-cols-2">
                 <div className="col-span-2">
                   <Label text="Código de Barras" forId="true" />
-                  <Input type="text" id="true" placeHolder={"200010123100"} value={product.barcode} />
+                  <Input type="text" id="true" placeHolder={"200010123100"} value={product.BARRAS} />
                 </div>
                 <div className="col-span-2">
                   <Label text="Nombre" forId="name" />
-                  <Input type="text" id="name" placeHolder={"BISTEC DE RES"} value={product.nombre} />
+                  <Input type="text" id="name" placeHolder={"BISTEC DE RES"} value={product.DESCRIPCION} />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <Label text="PLU" forId="plu"  />
-                  <Input type="text" id="plu" placeHolder={"100"} value={product.plu} />
+                  <Input type="text" id="plu" placeHolder={"100"} value={product.CODIGO} />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <Label text="Precio" forId="price" />
-                  <Input type="text" id="price" placeHolder={"$198"} value={product.precio} />
+                  <Input type="text" id="price" placeHolder={"$198"} value={product.P01} />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <Label text="Familia" forId="family" />
                   <select
                     id="category"
-                    defaultValue={product.family}
+                    defaultValue={product.FAMILIA}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   >
                     <option value="">Seleccione una categoría</option>
-                    <option value="res">RES</option>
-                    <option value="cerdo">CERDO</option>
-                    <option value="pollo">POLLO</option>
-                    <option value="marisco">MARISCO</option>
-                    <option value="cremeria">CREMERIA</option>
+                    <option value="RES">RES</option>
+                    <option value="PUERCO">CERDO</option>
+                    <option value="POLLO">POLLO</option>
+                    <option value="MARISCOS">MARISCO</option>
+                    <option value="CLA">CREMERIA</option>
                     <option value="abarrotes">ABARROTES</option>
                   </select>
                 </div>
@@ -98,10 +104,9 @@ const ModalPrice = ({ product, onClose, hidden }) => {
                 <div className="flex items-center space-x-2 ps-4 border border-gray-200 rounded dark:border-gray-700">
                   <input
                     type="checkbox"
-                    checked={isChecked}
+                    checked={product.IMPORTADO === 1} // Verifica si IMPORTADO es igual a 1 para marcar el checkbox
                     onChange={handleCheckboxChange}
                     id="basculas-check"
-                    value={product.scale ? "true" : "false"}
                     name="bordered-checkbox"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />

@@ -4,7 +4,7 @@ import Label from "../components/common/Label";
 import Input from "../components/common/Input";
 import Btn from "../components/common/Button";
 import ModalError from "../components/common/ModalError";
-import useApi from "../hooks/useApi"; // Ajusta la ruta según donde hayas ubicado useApi.js
+import useApi from "../services/useApi"; // Ajusta la ruta según donde hayas ubicado useApi.js
 import ModalPrice from "../components/common/ModalPrice";
 
 const Prices = () => {
@@ -12,7 +12,7 @@ const Prices = () => {
   const [plu, setPlu] = useState("");
   const [searchError, setSearchError] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
-  const { loading, error, checkProductExistence } = useApi();
+  const { loading, error, getProductByName, getProductByPLU } = useApi();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
 
@@ -27,19 +27,18 @@ const Prices = () => {
     setSearchError(false);
 
     try {
-      let exists;
-      let productFound;
+      var productResponse = null;
 
       if (productName) {
-        exists = await checkProductExistence({ productName });
-        productFound = exists;
+        console.log("Buscando por nombre:", productName);
+        productResponse = await getProductByName( productName );
       } else if (plu) {
-        exists = await checkProductExistence({ pluProduct: plu });
-        productFound = exists;
+        console.log("Buscando por PLU:", plu);
+        productResponse = await getProductByPLU( plu );
       }
 
-      if (exists) {
-        setSearchResult(productFound);
+      if (productResponse) {
+        setSearchResult(productResponse);
         setIsModalOpen(true);
       } else {
         setSearchError(true);
@@ -64,7 +63,11 @@ const Prices = () => {
                 id="nameProduct"
                 placeHolder="BISTEC DE RES"
                 value={productName}
-                onChange={(e) => setProductName(e.target.value)}
+                onChange={(e) => {
+                  setProductName(e.target.value);
+                  setPlu(""); // Limpiar plu cuando se escribe en productName
+                }}
+                disabled={plu.length > 0}
               />
             </div>
             <p className="text-center px-3 lg:py-14">ó</p>
@@ -74,12 +77,15 @@ const Prices = () => {
                 id="pluProduct"
                 placeHolder="100"
                 value={plu}
-                onChange={(e) => setPlu(e.target.value)}
+                onChange={(e) => {
+                  setPlu(e.target.value);
+                  setProductName(""); // Limpiar productName cuando se escribe en plu
+                }}
+                disabled={productName.length > 0}
               />
             </div>
           </div>
           <div className="w-1/2 md:flex mt-3 md:items-center">
-            {/* Ahora handleSearch se ejecutará solo cuando se haga clic en el botón */}
             <Btn body="BUSCAR" onClick={handleSearch} />
           </div>
         </form>
@@ -90,5 +96,6 @@ const Prices = () => {
     </Box>
   );
 };
+
 
 export default Prices;
