@@ -60,7 +60,6 @@ const ModalPrice = ({ product, onClose, hidden }) => {
   const saveProduct = async () => {
     try {
       // Lógica para guardar los cambios en el producto
-      console.log("Guardando cambios en el producto:", editedProduct);
       
       // Llamar a la función putProductData de useApi.js para guardar los cambios
       await putProductData(editedProduct.CODIGO, editedProduct);
