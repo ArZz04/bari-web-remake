@@ -91,7 +91,7 @@ const Prices = () => {
         </form>
         {loading && <p className="text-center mt-3">Buscando producto...</p>}
         <ModalError onClose={closeModal} hidden={!isModalErrorOpen} body="No se encontraron resultados" />
-        <ModalPrice onClose={closeModal} hidden={!isModalOpen} product={searchResult} />
+        <ModalPrice onClose={closeModal} hidden={!isModalOpen} product={searchResult || ''} />
       </div>
     </Box>
   );
