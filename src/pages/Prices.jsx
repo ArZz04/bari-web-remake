@@ -30,10 +30,8 @@ const Prices = () => {
       var productResponse = null;
 
       if (productName) {
-        console.log("Buscando por nombre:", productName);
         productResponse = await getProductByName( productName );
       } else if (plu) {
-        console.log("Buscando por PLU:", plu);
         productResponse = await getProductByPLU( plu );
       }
 
