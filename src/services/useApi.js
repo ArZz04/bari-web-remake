@@ -39,11 +39,26 @@ const useApi = () => {
     }
   };
 
+  const putProductData = async ( plu, newData ) => {
+
+    try {
+      const response = await axiosInstance.put("/products/update/short/"+plu, newData);
+
+      return response.data;
+    } catch (error) {
+      setLoading(false);
+      console.log("Producto no encontrado:");
+      setError(error.response.data.message);
+      throw error;
+    }
+  };
+
   return {
     loading,
     error,
     getProductByName,
-    getProductByPLU
+    getProductByPLU,
+    putProductData
   };
 };
 
