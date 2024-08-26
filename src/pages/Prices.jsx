@@ -6,15 +6,18 @@ import Btn from "../components/common/Button";
 import ModalError from "../components/common/ModalError";
 import useApi from "../services/useApi"; // Ajusta la ruta según donde hayas ubicado useApi.js
 import ModalPrice from "../components/common/ModalPrice";
+import Suggest from "../components/common/Suggestion";
 
 const Prices = () => {
   const [productName, setProductName] = useState("");
   const [plu, setPlu] = useState("");
   const [searchError, setSearchError] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
-  const { loading, error, getProductByName, getProductByPLU } = useApi();
+  const { loading, error, getProductByName, getProductByPLU, getProductBySimilarName } = useApi();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState([]); // Estado para las sugerencias
+  const [isWriting, setIsWriting] = useState(false);
 
   // Función para cerrar los modales
   const closeModal = () => {
@@ -49,6 +52,24 @@ const Prices = () => {
     }
   };
 
+  const handleSuggestions = async (name) => {
+    try {
+      let suggestionsResponse = null;
+
+      if (name) {
+        suggestionsResponse = await getProductBySimilarName(name);
+      }
+
+      if (suggestionsResponse) {
+        setSuggestions(suggestionsResponse); // Actualizar el estado de las sugerencias
+      } else {
+        setSuggestions([]); // Limpiar sugerencias si no hay resultados
+      }
+    } catch (error) {
+      console.error("Error al obtener sugerencias:", error);
+    }
+  };
+
   return (
     <Box title="PRECIOS">
       <div className="p-5">
@@ -62,11 +83,38 @@ const Prices = () => {
                 placeHolder="BISTEC DE RES"
                 value={productName}
                 onChange={(e) => {
-                  setProductName(e.target.value);
+                  const value = e.target.value;
+                  setProductName(value);
                   setPlu(""); // Limpiar plu cuando se escribe en productName
+
+                  if (value.length > 0) {
+                    handleSuggestions(value); // Llamar a la función de sugerencias con el valor actual
+                  } else {
+                    setSuggestions([]); // Limpiar sugerencias si el input está vacío
+                  }
                 }}
                 disabled={plu.length > 0}
               />
+              {/* Mostrar sugerencias debajo del campo de entrada */}
+              {suggestions.length > 0 && (
+                <div className="absolute flex flex-col shadow mt-2 w-3/4">
+                  {suggestions.map((suggestion, index) => {
+                    if (index > 4) return null; // Limitar a 5 sugerencias
+                    if (suggestion.DESCRIPCION === productName) return null; // No mostrar la sugerencia actual
+                    return (
+                        <Suggest
+                            key={index}
+                            plu={suggestion.CODIGO}
+                            nameProduct={suggestion.DESCRIPCION}
+                            onClick={() => {
+                                setProductName(suggestion.DESCRIPCION);
+                                setSuggestions([]); // Limpiar sugerencias después de seleccionar una
+                            }}
+                        />
+                    );
+                })}
+                </div>
+              )}
             </div>
             <p className="text-center px-3 lg:py-14">ó</p>
             <div className="w-full lg:w-1/2 px-3 lg:py-5">

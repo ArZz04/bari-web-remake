@@ -39,6 +39,23 @@ const useApi = () => {
     }
   };
 
+  const getProductBySimilarName = async ( productName ) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axiosInstance.get("/products/search/similar/"+productName);
+
+      setLoading(false);
+      return response.data;
+    } catch (error) {
+      setLoading(false);
+      console.log("Producto no encontrado:");
+      setError(error.response.data.message);
+      throw error;
+    }
+  }
+
   const putProductData = async ( plu, newData ) => {
 
     try {
@@ -58,6 +75,7 @@ const useApi = () => {
     error,
     getProductByName,
     getProductByPLU,
+    getProductBySimilarName,
     putProductData
   };
 };

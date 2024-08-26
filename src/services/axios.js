@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Define la URL base según el entorno
 const baseURL = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:3000/api/'  // URL de desarrollo
+  ? 'http://192.168.1.3:3000/api/'  // URL de desarrollo
   : 'https://api.arzz.site/api/';  // URL de producción
 
 const axiosInstance = axios.create({
